@@ -1,6 +1,8 @@
 from collections import defaultdict
 import time
 import csv
+import networkx as nx
+import matplotlib.pyplot as plt
 
 #Busca em largura com grafos direcionados Usando representação da lista de adjacência
 class Graph:
@@ -49,12 +51,15 @@ with open ('Grafo.CSV', mode='r') as csv_file:
     k = 0
     Vertice = []
     g = Graph()
+    ga = nx.Graph()
     for k, linha in enumerate(dados_csv):
         for i, coluna in enumerate(linha):
             if k == 0:
                 Vertice.append(int(coluna))
+                ga.add_node(Vertice[i])
             elif coluna == '1':
                 g.addEdge(Vertice[k-1], Vertice[i])
+                ga.add_edge(Vertice[k-1], Vertice[i])
 
 
 """
@@ -82,5 +87,10 @@ inicio = time.time()
 g.BFS(2)
 fim = time.time()
  
+plt.figure(2)
+
+nx.draw_networkx(ga, pos=nx.spring_layout(ga), with_labels=True)
+plt.show()
+
 #Exibe tempo decorrido
 print("\nTempo pecorrido: {0}".format(fim-inicio)) 
