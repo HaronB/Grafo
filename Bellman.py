@@ -1,5 +1,6 @@
 class Graph:
 
+    #Cria o grafo
     def __init__(self, vertices):
 
         self.M = vertices   # Total number of vertices in the graph
@@ -8,7 +9,7 @@ class Graph:
 
 
 
-    # Add edges
+    # Adiciona arestas 
 
     def add_edge(self, a, b, c):
 
@@ -16,7 +17,7 @@ class Graph:
 
 
 
-    # Print the solution
+    # Imprime solução 
 
     def print_solution(self, distance):
 
@@ -27,18 +28,21 @@ class Graph:
             print("{0}\t\t{1}".format(k, distance[k]))
 
 
-
+    #Algoritmo Bellman_ford
     def bellman_ford(self, src):
 
-
+        
+        #marca a ddistancia como inf
         distance = [float("Inf")] * self.M
 
+        #Set a distancia do ponto inicial como 0
         distance[src] = 0
 
 
-
+        
         for _ in range(self.M - 1):
-
+            
+            #Distancia entre os vertices
             for a, b, c in self.graph:
 
                 if distance[a] != float("Inf") and distance[a] + c < distance[b]:
@@ -46,7 +50,7 @@ class Graph:
                     distance[b] = distance[a] + c
 
 
-
+        #Verifica se não tem um loop negativo
         for a, b, c in self.graph:
 
             if distance[a] != float("Inf") and distance[a] + c < distance[b]:
