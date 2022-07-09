@@ -1,5 +1,29 @@
 import sys
- 
+import networkx as nx
+import matplotlib.pyplot as plt
+import time
+import random
+import csv
+
+#Gera a imagem do grafo
+def Grafico(G):
+
+    dict([((source,sink), data['weight']) for source, sink,data in G.edges(data=True)])
+
+    pos = nx.spring_layout(G)
+
+    plt.figure()
+    nx.draw_networkx(G, pos, with_labels= True, node_size=10)
+    nx.draw_networkx_nodes(G, pos)
+    plt.show()
+
+#Coverte o grafico gerado automaticamente em uma matrix para ser usada na class
+def CovertMatrix(n, G):
+    matrix = [[0 for x in range(n)] for y in range(n)]
+    for source, sink, data in G.edges(data=True):
+        matrix[source][sink] = data['weight']
+    return matrix
+    
 class Graph():
     
     #Cria o grafo
@@ -10,7 +34,7 @@ class Graph():
  
     #Imprime as distancia
     def pSol(self, dist):
-        print("Distance of vertex from source")
+        print("Distancia da origem")
         for node in range(self.V):
             print(node, "t", dist[node])
  
@@ -43,7 +67,6 @@ class Graph():
             
             
             u = self.minDistance(dist, sptSet)
-            print(u)
             sptSet[u] = True
  
             #Registra as distancia entre os pontos
@@ -53,13 +76,99 @@ class Graph():
  
         self.pSol(dist)
 
-f = Graph(6)
-f.graph = [[0, 0, 6, 0, 0, 3],
-           [0, 0, 0, 2, 0, 8],
-           [6, 0, 0, 1, 3, 4],
-           [0, 2, 1, 0, 1, 0],
-           [0, 0, 3, 1, 0, 10],
-           [3, 8, 4, 0, 10, 0]
-           ]
- 
-f.dijk(5)
+#numero de vertices
+n = 100
+
+#chance de ter uma aresta
+p = 0.1
+
+G1 = nx.gnp_random_graph(n, p, directed=True)
+for (u, v) in G1.edges():
+    G1.edges[u,v]['weight'] = random.randint(1,10)
+    
+G2 = nx.gnp_random_graph(n, p, directed=True)
+for (u, v) in G2.edges():
+    G2.edges[u,v]['weight'] = random.randint(1,10)
+    
+G3 = nx.gnp_random_graph(n, p, directed=True)
+for (u, v) in G3.edges():
+    G3.edges[u,v]['weight'] = random.randint(1,10)
+    
+#Tempo inicio
+inicio = time.time()
+
+#Cria um objeto class grafo e os vértices
+f1 = Graph(n)
+
+#Cria as arestas
+f1.graph = CovertMatrix(n, G1)
+
+#Exibe o Grafo
+Grafico(G1)
+
+#Dijkstra
+f1.dijk(3)
+
+#Tempo Fim
+fim = time.time()
+print("\nTempo pecorrido Grafo1: {0}".format(fim-inicio))
+
+#Escreve um arquivo com a matrix do grafo
+with open ('Grafo1.CSV', mode='w', newline='') as csv_file:
+    dados_csv = csv.writer(csv_file, delimiter = ';') 
+    dados_csv.writerow([i for i in range(100)])
+    for i in CovertMatrix(n, G1):
+        dados_csv.writerow(i)
+
+#Tempo inicio
+inicio = time.time()
+
+#Cria um objeto class grafo e os vértices
+f2 = Graph(n)
+
+#Cria as arestas
+f2.graph = CovertMatrix(n, G2)
+
+#Exibe o Grafo
+Grafico(G2)
+
+#Dijkstra
+f2.dijk(9)
+
+#Tempo Fim
+fim = time.time()
+print("\nTempo pecorrido Grafo2: {0}".format(fim-inicio))
+
+#Escreve um arquivo com a matrix do grafo
+with open ('Grafo2.CSV', mode='w', newline='') as csv_file:
+    dados_csv = csv.writer(csv_file, delimiter = ';') 
+    dados_csv.writerow([i for i in range(100)])
+    for i in CovertMatrix(n, G2):
+        dados_csv.writerow(i)
+
+#Tempo inicio
+inicio = time.time()
+
+#Cria um objeto class grafo e os vértices
+f3 = Graph(n)
+
+#Cria as arestas
+f3.graph = CovertMatrix(n, G3)
+
+#Exibe o Grafo
+Grafico(G3)
+
+#Dijkstra
+f3.dijk(10)
+
+#Tempo Fim
+fim = time.time()
+print("\nTempo pecorrido Grafo3: {0}".format(fim-inicio))
+
+#Escreve um arquivo com a matrix do grafo
+with open ('Grafo3.CSV', mode='w', newline='') as csv_file:
+    dados_csv = csv.writer(csv_file, delimiter = ';') 
+    dados_csv.writerow([i for i in range(100)])
+    for i in CovertMatrix(n, G3):
+        dados_csv.writerow(i)
+
